@@ -1,0 +1,47 @@
+# depslib dependency file v1.0
+1372079082 source:/home/erik/Programme/Mensaplan-C/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"loader.h"
+	"initializer.h"
+	"parser.h"
+
+1372008884 source:/home/erik/Programme/Mensaplan-C/loader.c
+	<curl/curl.h>
+	<stdio.h>
+	<stdlib.h>
+	"loader.h"
+
+1372007873 /home/erik/Programme/Mensaplan-C/loader.h
+
+1372079029 source:/home/erik/Programme/Mensaplan-C/initializer.c
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+	<pwd.h>
+	<unistd.h>
+	<sys/types.h>
+	"loader.h"
+	"initializer.h"
+	"IO.h"
+
+1371985080 /home/erik/Programme/Mensaplan-C/initializer.h
+
+1372067023 source:/home/erik/Programme/Mensaplan-C/IO.c
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1372066994 /home/erik/Programme/Mensaplan-C/IO.h
+
+1372079252 source:/home/erik/Programme/Mensaplan-C/parser.c
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+	"loader.h"
+	"parser.h"
+	"IO.h"
+
+1372078361 /home/erik/Programme/Mensaplan-C/parser.h
+
