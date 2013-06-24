@@ -122,7 +122,7 @@ int initializer(){
         char * cPath = getConfigPath();
         FILE * confy = fopen(cPath,"w+");
         if(confy){
-            fprintf(confy, "%s\n", myMensa->mensaURL);
+            fprintf(confy, "%s", myMensa->mensaURL);
             fclose(confy);
             printf("Ok > %s\n", cPath);
         } else {
