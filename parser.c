@@ -122,9 +122,12 @@ struct mealTopic * collectMeals(FILE * mealFile, struct mealTopic * cTopics){
                 nextItem->priceStudent = calloc(MAX_MALLOC_PRICES_STRING, 1);
                 nextItem->priceWorker  = calloc(MAX_MALLOC_PRICES_STRING, 1);
                 nextItem->priceForeigner = calloc(MAX_MALLOC_PRICES_STRING, 1);
-                switch (sscanf(mealPrices, "EUR %[0-9.] / %[0-9.] / %[0-9.]", nextItem->priceStudent, nextItem->priceWorker, nextItem->priceForeigner)){
+                int scanfReturn = sscanf(mealPrices, "EUR %[0-9.] / %[0-9.] / %[0-9.]", nextItem->priceStudent, nextItem->priceWorker, nextItem->priceForeigner);
+                /* printf("%d\n",scanfReturn); */
+                switch (scanfReturn){
+                    case -1:
                     case 0: {
-                        nextItem->priceStudent = "---";
+                        nextItem->priceStudent = "-.--";
                     } /* Fall through */
                     case 1: {
                         nextItem->priceWorker = nextItem->priceStudent;
@@ -185,9 +188,9 @@ void printMealPlan(struct mealTopic * cTopics, int pNotColored, int pPrices[3]){
             } else {
                 descString = iTemp->description;
             }
-         /*   sprintf(priceString, "€ %s  %s  %s", (pPrices[0]) ? iTemp->priceStudent : "", (pPrices[1]) ? iTemp->priceWorker : "",
-                     (pPrices[2]) ? iTemp->priceForeigner : ""); */
-            strcpy(priceString, "€ ");
+            sprintf(priceString, "€ %4s  %4s  %4s  ", (pPrices[0]) ? iTemp->priceStudent : "", (pPrices[1]) ? iTemp->priceWorker : "",
+                     (pPrices[2]) ? iTemp->priceForeigner : "");
+            /*strcpy(priceString, "€ ");
             if(pPrices[0]){
                 strcat(priceString, iTemp->priceStudent);
                 strcat(priceString, "  ");
@@ -199,7 +202,7 @@ void printMealPlan(struct mealTopic * cTopics, int pNotColored, int pPrices[3]){
             if(pPrices[2]){
                 strcat(priceString, iTemp->priceForeigner);
                 strcat(priceString, "  ");
-            }
+            } */
             printf("%s%s\n", priceString, descString);
             iTemp = iTemp->nextItem;
         }
@@ -221,7 +224,7 @@ int parsePlan(char * mensaURL, int pNextDay, int pColored, int pPrices[3]){
     FILE * mealFile = tmpfile();
     if(!mealFile){ return -1; }
     /* printf("Downloading: %s\n", myURL); */
-    if(downloadPage(myURL, mealFile)){ return -2; }
+    if(downloadPage(myURL, mealFile)){ free(myURL); return -2; }
 
     puts("");
     printTitle(mealFile);

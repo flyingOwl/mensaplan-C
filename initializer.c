@@ -93,7 +93,7 @@ struct MensaList * getMensaListElement(struct MensaList * head, int index){
 
 char * getConfigPath(){
     struct passwd *pw = getpwuid(getuid());
-    char * path = malloc(strlen(pw->pw_dir) + 20);
+    char * path = malloc(strlen(pw->pw_dir) + strlen(CONFIG_FILE) + 1);
     strcpy(path, pw->pw_dir);
     strcat(path, CONFIG_FILE);
     return path;
