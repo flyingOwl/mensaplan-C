@@ -42,6 +42,10 @@ void trimTrailingSpace(char * string){
 
 struct mealTopic * collectTopics(FILE * mealFile){
     FILE * cFile = positionStream(mealFile, SITE_TABLE_START,0);
+    if(!cFile){
+        puts("[FAIL] Format of mealplan could not be recognized!");
+        return NULL;
+    }
     struct mealTopic * head = 0, * next;
     char * cLine, * cTemp;
     while(positionStream(cFile, SITE_TOPIC_LINE, 0)){
@@ -68,8 +72,6 @@ struct mealTopic * collectTopics(FILE * mealFile){
 struct mealTopic * collectMeals(FILE * mealFile, struct mealTopic * cTopics){
     struct mealTopic * nextTopic, * currentTopic = cTopics;
     nextTopic = cTopics->nextTopic;
-
-//    FILE cPosition, nPosition;
 
     while(nextTopic){
        /*  printf("Collect between %s and %s\n", currentTopic->description, nextTopic->description); */
@@ -188,9 +190,9 @@ void printMealPlan(struct mealTopic * cTopics, int pNotColored, int pPrices[3]){
             } else {
                 descString = iTemp->description;
             }
-            sprintf(priceString, "€ %4s  %4s  %4s  ", (pPrices[0]) ? iTemp->priceStudent : "", (pPrices[1]) ? iTemp->priceWorker : "",
-                     (pPrices[2]) ? iTemp->priceForeigner : "");
-            /*strcpy(priceString, "€ ");
+            /* sprintf(priceString, "€ %4s  %4s  %4s  ", (pPrices[0]) ? iTemp->priceStudent : "", (pPrices[1]) ? iTemp->priceWorker : "",
+                     (pPrices[2]) ? iTemp->priceForeigner : ""); */
+            strcpy(priceString, "€ ");
             if(pPrices[0]){
                 strcat(priceString, iTemp->priceStudent);
                 strcat(priceString, "  ");
@@ -202,7 +204,7 @@ void printMealPlan(struct mealTopic * cTopics, int pNotColored, int pPrices[3]){
             if(pPrices[2]){
                 strcat(priceString, iTemp->priceForeigner);
                 strcat(priceString, "  ");
-            } */
+            }
             printf("%s%s\n", priceString, descString);
             iTemp = iTemp->nextItem;
         }
@@ -230,10 +232,13 @@ int parsePlan(char * mensaURL, int pNextDay, int pColored, int pPrices[3]){
     printTitle(mealFile);
 
     struct mealTopic * cTopics = collectTopics(mealFile);
-
-    cTopics = collectMeals(mealFile, cTopics);
-    puts("");
-    printMealPlan(cTopics, pColored, pPrices);
-
+    
+    if(!cTopics){
+        printf("[INFO] Please visit the website:\n[INFO] %s\n", mensaURL);
+    } else {
+        cTopics = collectMeals(mealFile, cTopics);
+        puts("");
+        printMealPlan(cTopics, pColored, pPrices);
+    }
     return 0;
 }
