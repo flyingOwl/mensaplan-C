@@ -6,7 +6,7 @@
 #include "initializer.h"
 #include "parser.h"
 
-void printHelp(char* exec){
+void printHelp(char * exec){
     puts("Mensaplan application in C\n");
     puts("Usage:");
     printf("%s [--init] [-n|--next-day] [--not-colored] [-S -M -F] [-h|--help]\n", exec);
@@ -35,6 +35,7 @@ int main(int argc, char ** argv) {
         if(!strcmp("--help", argv[i]))      { printHelp(argv[0]); return 0; }
         /* if we get here... unknown parameter was given... */
         printf("Unknown option: \"%s\"\n", argv[i]);
+	return 1;
     }
 
     if(!pPrices[0] && !pPrices[1] && !pPrices[2]){

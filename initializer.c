@@ -116,7 +116,7 @@ int initializer(){
         printf("\nMensa number: ");
         int selection = readUserNumber(1, i - 1);
         struct MensaList * myMensa = getMensaListElement(alleMensen, selection);
-        printf("Selected mensa %s\n\n", myMensa->mensaName);
+        printf("Selected: \"%s\"\n\n", myMensa->mensaName);
 
         puts("Writing configuration");
         char * cPath = getConfigPath();
