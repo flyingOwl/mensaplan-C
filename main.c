@@ -6,10 +6,10 @@
 #include "initializer.h"
 #include "parser.h"
 
-void printHelp(){
+void printHelp(char* exec){
     puts("Mensaplan application in C\n");
     puts("Usage:");
-    puts("<executable> [--init] [-n|--next-day] [--not-colored] [-S -M -F] [-h|--help]\n");
+    printf("%s [--init] [-n|--next-day] [--not-colored] [-S -M -F] [-h|--help]\n", exec);
     puts("\t[--init]          Select your Mensa from a list to set your config file");
     puts("\t[-n|--next-day]   Show the meal-plan of the next day");
     puts("\t[--not-colored]   Don't use colored descriptions");
@@ -31,8 +31,8 @@ int main(int argc, char ** argv) {
         if(!strcmp("-S", argv[i]))          { pPrices[0] = 1; continue; }
         if(!strcmp("-M", argv[i]))          { pPrices[1] = 1; continue; }
         if(!strcmp("-F", argv[i]))          { pPrices[2] = 1; continue; }
-        if(!strcmp("-h", argv[i]))          { printHelp(); return 0; }
-        if(!strcmp("--help", argv[i]))      { printHelp(); return 0; }
+        if(!strcmp("-h", argv[i]))          { printHelp(argv[0]); return 0; }
+        if(!strcmp("--help", argv[i]))      { printHelp(argv[0]); return 0; }
         /* if we get here... unknown parameter was given... */
         printf("Unknown option: \"%s\"\n", argv[i]);
     }
