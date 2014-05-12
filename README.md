@@ -4,8 +4,9 @@ This C application features a simple yet powerful way to access the online mealp
 
 ## Installation
 
-Just clone this repository (or download it in any way). Inside the code directory simply call ``` make ```.
-There is also `make release` to run gcc with the -O2 switch.
+Just clone this repository (or download it in any way). Then make sure you got the `libcurl-dev` package installed. Without this the build will fail. 
+
+Inside the code directory simply call `make`. There is also `make release` to run gcc with the -O2 switch.
 
 You will get an executable called `Mensaplan-C`
 
