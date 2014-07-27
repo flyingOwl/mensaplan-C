@@ -77,6 +77,10 @@ int readUserNumber(int min, int max){
                 return i;
             } else {
                 printf("Try again: ");
+		/* flush input buffer... */
+		if(strchr(buf, '\n') == NULL){
+			while ((i = getchar()) != '\n' && i != EOF);
+		}
                 i = 0;
             }
         }
