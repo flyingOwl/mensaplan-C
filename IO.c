@@ -61,3 +61,7 @@ char * seekLine(FILE * fPointer, char * string, int doRewind){
     }
     return NULL;
 }
+
+char * nextLine(FILE * fPointer){
+    return readLine(fPointer);
+}

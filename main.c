@@ -51,8 +51,8 @@ int main(int argc, char ** argv) {
     if(pInit || !myConfig){
         return initializer();
     } else {
-        char * buffer = calloc(200,1);
-        if(fgets(buffer, 200, myConfig)){
+        char * buffer = calloc(PLAN_MENSA_ID_STRLEN,1);
+        if(fgets(buffer, PLAN_MENSA_ID_STRLEN, myConfig)){
             parsePlan(buffer, pNextDay, pColored, pPrices);
         }
         free(buffer);

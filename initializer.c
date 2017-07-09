@@ -12,14 +12,18 @@
 struct MensaList {
     struct MensaList * nextItem;
     char * mensaName;
-    char * mensaURL;
+    char * mensaId;
 };
+
+enum parseState { IDLE, HASID };
 
 struct MensaList * collectMensen(FILE * htmlFile){
     struct MensaList * head = 0, * next = 0;
     positionStream(htmlFile, MENSA_LIST_START, 1);
     free(readLine(htmlFile));
     int divcount = 1;
+    enum parseState _ps = IDLE;
+    char * _tempId = NULL;
     while(divcount){
         char * cLine = readLine(htmlFile);
         char * cTemp = cLine;
@@ -34,33 +38,31 @@ struct MensaList * collectMensen(FILE * htmlFile){
             cTemp++;
         }
 
-        if(strstr(cLine, "<li>")){ /* Content line */
-            char * cNext, * buffer;
-            cTemp = strstr(cLine, "href=");
-            if(cTemp){
-                cTemp += 8;
-                cNext = strchr(cTemp, '"');
-                cNext -= 10;
-                if(!cNext){ return NULL; }
-                buffer = malloc((cNext - cTemp) + strlen(LIST_URL_LINK) + 1);
-                strcpy(buffer, LIST_URL_LINK);
-                strncat(buffer, cTemp, (cNext - cTemp));
-                if(!head){
-                    head = malloc(sizeof(struct MensaList));
-                    next = head;
-                } else {
-                    next->nextItem = malloc(sizeof(struct MensaList));
-                    next = next->nextItem;
-                }
-                next->mensaURL = buffer;
-                cTemp = strchr(cTemp,'>') + 1;
-                cNext = strchr(cTemp,'<');
-                buffer = malloc((cNext - cTemp) + 1);
-                strncpy(buffer, cTemp, (cNext - cTemp));
-                buffer[(cNext - cTemp)] = '\0';
-                next->mensaName = buffer;
-                next->nextItem = 0;
+        if (_ps == IDLE && (cTemp = strstr(cLine, "xhrLoad('"))) {
+            cTemp += 9;
+            (strchr(cTemp, '\''))[0] = '\0';
+            _tempId = strdup(cTemp);
+            _ps = HASID;
+            continue;
+        }
+
+        if (_ps == HASID && (cTemp = strstr(cLine, "class=\"dummy\"><div>"))) {
+            cTemp += 19;
+            (strchr(cTemp, '<'))[0] = '\0';
+
+            if(!head){
+                head = malloc(sizeof(struct MensaList));
+                next = head;
+            } else {
+                next->nextItem = malloc(sizeof(struct MensaList));
+                next = next->nextItem;
             }
+            next->mensaId = _tempId;
+            next->mensaName = strdup(cTemp);
+            next->nextItem = 0;
+
+            _ps = IDLE;
+            continue;
         }
         free(cLine);
     }
@@ -106,8 +108,12 @@ char * getConfigPath(){
 int initializer(){
     puts("\n### Welcome to the Studentenwerk Mensa application! ###\n");
     FILE * pListPage = tmpfile();
-    if(!downloadPage(LIST_URL, pListPage)){
+    if(!downloadPage(LIST_URL, NULL, pListPage)){
         struct MensaList * alleMensen = collectMensen(pListPage);
+        if (!alleMensen) {
+            return 1;
+        }
+
         puts("Select your Mensa:\n");
         struct MensaList * mTemp = alleMensen;
         int i = 1;
@@ -126,7 +132,7 @@ int initializer(){
         char * cPath = getConfigPath();
         FILE * confy = fopen(cPath,"w+");
         if(confy){
-            fprintf(confy, "%s", myMensa->mensaURL);
+            fprintf(confy, "%s", myMensa->mensaId);
             fclose(confy);
             printf("Ok > %s\n", cPath);
         } else {
