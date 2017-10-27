@@ -18,6 +18,10 @@ void printHelp(char * exec){
     puts("");
 }
 
+void printVersion() {
+    printf("Version: %s\n", VERSION);
+}
+
 int main(int argc, char ** argv) {
 
     int pInit = 0, pNextDay = 0, pColored = 0;
@@ -31,6 +35,8 @@ int main(int argc, char ** argv) {
         if(!strcmp("-S", argv[i]))          { pPrices[0] = 1; continue; }
         if(!strcmp("-M", argv[i]))          { pPrices[1] = 1; continue; }
         if(!strcmp("-F", argv[i]))          { pPrices[2] = 1; continue; }
+        if(!strcmp("-v", argv[i]))          { printVersion(); return 0; }
+        if(!strcmp("--version", argv[i]))   { printVersion(); return 0; }
         if(!strcmp("-h", argv[i]))          { printHelp(argv[0]); return 0; }
         if(!strcmp("--help", argv[i]))      { printHelp(argv[0]); return 0; }
         /* if we get here... unknown parameter was given... */
