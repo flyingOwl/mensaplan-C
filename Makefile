@@ -1,6 +1,7 @@
 LIBS = -lcurl
 
-CFLAGS        = -Wall
+VERSION       = $(shell git rev-parse HEAD)
+CFLAGS        = -Wall -DVERSION=\"$(VERSION)\"
 CFLAGSRELEASE = -Wall -O2
 CFLAGSDEBUG   = -Wall -g
 
