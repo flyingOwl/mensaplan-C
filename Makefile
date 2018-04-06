@@ -1,9 +1,10 @@
 LIBS = -lcurl
 
-VERSION       = $(shell git rev-parse HEAD)
-CFLAGS        = -Wall -DVERSION=\"$(VERSION)\"
-CFLAGSRELEASE = -Wall -O2
-CFLAGSDEBUG   = -Wall -g
+VERSION       = $(shell git describe --always)
+CDEFINES      = -DVERSION=\"$(VERSION)\"
+CFLAGS        = -Wall $(CDEFINES)
+CFLAGSRELEASE = -Wall -O2 $(CDEFINES)
+CFLAGSDEBUG   = -Wall -Wextra -g $(CDEFINES)
 
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)

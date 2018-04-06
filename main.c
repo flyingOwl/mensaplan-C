@@ -15,6 +15,7 @@ void printHelp(char * exec){
     puts("\t[--not-colored]   Don't use colored descriptions");
     puts("\t[-S -M -F]        Show only the prices for student (-S), workers (-M) or stranger (-F)");
     puts("\t[-h|--help]       Show this help");
+    puts("\t[-v|--version]    Show the version of this tool");
     puts("");
 }
 
