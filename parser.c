@@ -240,7 +240,7 @@ int parsePlan(char * mensaId, int pNextDay, int pColored, int pPrices[3]){
     if (pNextDay) {
         strcat(postData, "&");
         strcat(postData, PLAN_DATE);
-        strcat(postData, getValueNextDay(2));
+        strcat(postData, getValueNextDay(pNextDay));
     }
     FILE * mealFile = tmpfile();
     if(!mealFile){ return -1; }

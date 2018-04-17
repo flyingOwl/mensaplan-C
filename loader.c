@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "loader.h"
 
@@ -27,35 +28,25 @@ size_t writeToString(void * ptr, size_t size, size_t nmemb, struct string * s) {
 }
 
 char * getValueNextDay (int daysInFuture) {
-    CURL * myDownload = curl_easy_init();
-    if(myDownload){
-        struct string _s;
-        initString(&_s);
-        int error = 0, perform = 0;
-        error += curl_easy_setopt(myDownload, CURLOPT_URL, PLAN_DAY_NAVIGATION);
-        error += curl_easy_setopt(myDownload, CURLOPT_WRITEFUNCTION, writeToString);
-        error += curl_easy_setopt(myDownload, CURLOPT_WRITEDATA, &_s);
-        perform = curl_easy_perform(myDownload);
-        if(perform){
-            const char * cError = curl_easy_strerror(perform);
-            printf("ERROR: %s\n", cError);
-        }
-        curl_easy_cleanup(myDownload);
+    /* get current date and add x number of days */
+    time_t _time = time(NULL);
+    struct tm _timeStruct = *localtime(&_time);
 
-        size_t _maxLen = strlen(PLAN_DAY_NEXTDAY) + 2;
-        char * _splDay = calloc(_maxLen, sizeof(char));
-        snprintf(_splDay, _maxLen, "%s%d", PLAN_DAY_NEXTDAY, daysInFuture);
-
-        char * _temp = strstr(_s.str, _splDay);
-        if (_temp) {
-            _temp = strstr(_temp, PLAN_DAY_VALUE);
-            _temp += strlen(PLAN_DAY_VALUE);
-            (strchr(_temp, '\''))[0] = '\0';
-        }
-        return _temp;
+    if (daysInFuture == AUTO_NEXT_DAY) {
+        /* jump to next day, unless it's a weekend */
+        do {
+            _timeStruct.tm_mday += 1;
+            mktime(&_timeStruct);
+        } while (_timeStruct.tm_wday == 0 || _timeStruct.tm_wday == 6);
     } else {
-        return NULL;
+        /* jump x days */
+        _timeStruct.tm_mday += daysInFuture;
+        mktime(&_timeStruct);
     }
+    size_t _maxLen = PLAN_DATE_STRLEN;
+    char * _splDay = calloc(_maxLen, sizeof(char));
+    snprintf(_splDay, _maxLen, "%d-%d-%d", _timeStruct.tm_year + 1900, _timeStruct.tm_mon + 1, _timeStruct.tm_mday);
+    return _splDay;
 }
 
 int downloadPage(char * url, char * params, FILE * filename){

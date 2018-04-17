@@ -30,8 +30,8 @@ int main(int argc, char ** argv) {
     int i = 1;
     for(; i < argc; i++){
         if(!strcmp("--init", argv[i]))      { pInit = 1;    continue; }
-        if(!strcmp("--next-day", argv[i]))  { pNextDay = 1; continue; }
-        if(!strcmp("-n", argv[i]))          { pNextDay = 1; continue; }
+        if(!strcmp("--next-day", argv[i]))  { pNextDay = AUTO_NEXT_DAY; continue; }
+        if(!strcmp("-n", argv[i]))          { pNextDay = AUTO_NEXT_DAY; continue; }
         if(!strcmp("--not-colored",argv[i])){ pColored = 1;  continue; }
         if(!strcmp("-S", argv[i]))          { pPrices[0] = 1; continue; }
         if(!strcmp("-M", argv[i]))          { pPrices[1] = 1; continue; }
@@ -40,9 +40,10 @@ int main(int argc, char ** argv) {
         if(!strcmp("--version", argv[i]))   { printVersion(); return 0; }
         if(!strcmp("-h", argv[i]))          { printHelp(argv[0]); return 0; }
         if(!strcmp("--help", argv[i]))      { printHelp(argv[0]); return 0; }
+        if(sscanf(argv[i], "-n%d", &pNextDay) == 1) { continue; }
         /* if we get here... unknown parameter was given... */
         printf("Unknown option: \"%s\"\n", argv[i]);
-	return 1;
+        return 1;
     }
 
     if(!pPrices[0] && !pPrices[1] && !pPrices[2]){
